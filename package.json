@@ -17,9 +17,9 @@
     "build:all": "electron-builder --win -mwl"
   },
   "devDependencies": {
-    "electron": "^latest",
-    "electron-builder": "^latest",
-    "electron-squirrel-startup": "^latest"
+    "electron": "40.8.0",
+    "electron-builder": "26.8.1",
+    "electron-squirrel-startup": "1.0.1"
   },
   "build": {
     "appId": "com.openclaw.installer",

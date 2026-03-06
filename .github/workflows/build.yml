@@ -33,10 +33,6 @@ jobs:
           node-version: '22'
           cache: 'npm'
       
-      - name: Clear npm cache
-        run: npm cache clean --force
-        shell: bash
-
       - name: Print package.json content
         run: cat package.json
         shell: bash
