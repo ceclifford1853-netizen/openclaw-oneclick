@@ -13,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write
     
     strategy:
       matrix:
@@ -42,8 +44,10 @@ jobs:
         shell: bash
       
       - name: Build ${{ matrix.arch-name }} installer
-        run: npm run build -- --win --${{ matrix.arch }}
+        run: npm run build -- --win --${{ matrix.arch }} --publish never
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: List build artifacts
         run: ls -R dist/
