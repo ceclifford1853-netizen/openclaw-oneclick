@@ -38,9 +38,11 @@ jobs:
       
       - name: Build ${{ matrix.arch-name }} installer
         run: npm run build -- --win --${{ matrix.arch }}
+        shell: bash
       
       - name: List build artifacts
-        run: dir dist/
+        run: ls -R dist/
+        shell: bash
       
       - name: Upload ${{ matrix.arch-name }} artifact
         uses: actions/upload-artifact@v4
@@ -53,6 +55,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout code
