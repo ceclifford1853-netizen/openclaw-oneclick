@@ -42,8 +42,7 @@
             "ia32"
           ]
         }
-      ],
-
+      ]
     },
     "nsis": {
       "oneClick": true,
