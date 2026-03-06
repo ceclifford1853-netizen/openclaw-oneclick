@@ -1,0 +1,102 @@
+name: Build OpenClaw Installers
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        arch: [x64, ia32]
+        include:
+          - arch: x64
+            arch-name: "64-bit"
+          - arch: ia32
+            arch-name: "32-bit"
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build ${{ matrix.arch-name }} installer
+        run: npm run build -- --win --${{ matrix.arch }}
+      
+      - name: List build artifacts
+        run: dir dist/
+      
+      - name: Upload ${{ matrix.arch-name }} artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenClaw_Setup_${{ matrix.arch }}
+          path: dist/*.exe
+          retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: release-artifacts
+      
+      - name: Prepare release files
+        run: |
+          mkdir -p release
+          find release-artifacts -name "*.exe" -exec cp {} release/ \;
+          ls -la release/
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*.exe
+          draft: false
+          prerelease: false
+          body: |
+            # OpenClaw One-Click Installer Release
+            
+            This release includes both 64-bit and 32-bit installers with ClawJacked Shield security hardening.
+            
+            ## Downloads
+            - **OpenClaw_Setup_x64.exe** - Recommended for modern systems (64-bit)
+            - **OpenClaw_Setup_ia32.exe** - For legacy/32-bit systems
+            
+            ## Features
+            - Automatic Node.js 22 LTS installation
+            - WSL2 with systemd support (x64 only)
+            - ClawJacked Shield security hardening
+            - 2-minute silent installation
+            - Automatic daemon setup
+            
+            ## Installation
+            1. Download the appropriate installer for your system
+            2. Run as Administrator
+            3. Follow the on-screen prompts
+            4. Installation completes in ~2 minutes
+            
+            For more information, visit: https://github.com/ceclifford1853-netizen/openclaw-installer-landing-page
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
