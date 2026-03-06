@@ -43,11 +43,7 @@
           ]
         }
       ],
-      "certificateFile": null,
-      "certificatePassword": null,
-      "signingHashAlgorithms": [
-        "sha256"
-      ]
+
     },
     "nsis": {
       "oneClick": true,
