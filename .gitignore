@@ -6,7 +6,8 @@ yarn-error.log*
 
 # Build outputs
 dist/
-build/
+# build/ - source assets are tracked (not ignored)
+# dist/ contains build output and is ignored
 *.exe
 *.msi
 *.dmg
