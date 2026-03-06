@@ -1,0 +1,65 @@
+{
+  "name": "openclaw-oneclick-installer",
+  "version": "1.0.0",
+  "description": "OpenClaw One-Click Installer for Windows - Automated setup with ClawJacked Shield security hardening",
+  "main": "src/index.js",
+  "author": "OpenClaw Project",
+  "license": "MIT",
+  "homepage": "https://github.com/ceclifford1853-netizen/openclaw-installer-landing-page",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ceclifford1853-netizen/openclaw-oneclick.git"
+  },
+  "scripts": {
+    "build": "electron-builder",
+    "build:x64": "electron-builder --win --x64",
+    "build:x86": "electron-builder --win --ia32",
+    "build:all": "electron-builder --win -mwl"
+  },
+  "devDependencies": {
+    "electron": "^latest",
+    "electron-builder": "^latest",
+    "electron-squirrel-startup": "^latest"
+  },
+  "build": {
+    "appId": "com.openclaw.installer",
+    "productName": "OpenClaw One-Click Installer",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "scripts/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "certificateFile": null,
+      "certificatePassword": null,
+      "signingHashAlgorithms": [
+        "sha256"
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "OpenClaw One-Click Installer",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeader": "build/header.bmp",
+      "installerSidebar": "build/sidebar.bmp",
+      "include": "build/installer.nsh"
+    }
+  }
+}
